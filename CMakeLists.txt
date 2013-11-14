@@ -154,7 +154,7 @@ add_subdirectory(
 include_directories(
     SYSTEM
     ${CMAKE_CURRENT_SOURCE_DIR}/contrib/ogre_ogg_sound/include
-    ${OPENAL_INCLUDE_DIRS}
+    ${OpenAL_INCLUDE_DIRS}
     ${OGG_INCLUDE_DIRS}
     ${VORBIS_INCLUDE_DIRS}
 )
@@ -209,7 +209,7 @@ target_link_libraries(ThriveLib
     ${BULLET_COLLISION_LIBRARY}
     ${BULLET_MATH_LIBRARY}
     ${BULLET_SOFTBODY_LIBRARY}
-    ${OPENAL_LIBRARY}
+    ${OpenAL_LIBRARIES}
     ${Ogg_LIBRARIES}
     ${Vorbis_LIBRARIES}
     OgreOggSound
