@@ -94,6 +94,11 @@ end
 local function setupEmitter()
     -- Setting up an emitter for energy
     local entity = Entity("energy-emitter")
+    -- Sound
+    local soundSource = SoundSourceComponent("emitter", "rain.ogg", false, true, false)
+    soundSource.properties.playState = SoundSourceComponent.Play
+    soundSource.properties.relativeToListener = true
+    entity:addComponent(soundSource)
     -- Rigid body
     local rigidBody = RigidBodyComponent()
     rigidBody.properties.friction = 0.2
@@ -280,6 +285,7 @@ local function createMicrobeStage(name)
             BulletToOgreSystem(),
             -- Graphics
             OgreAddSceneNodeSystem(),
+            SoundSourceSystem(),
             OgreUpdateSceneNodeSystem(),
             OgreCameraSystem(),
             OgreLightSystem(),
