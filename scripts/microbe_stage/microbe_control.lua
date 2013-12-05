@@ -44,5 +44,5 @@ function MicrobeControlSystem:update(milliseconds)
     local targetPoint = getTargetPoint()
     local movementDirection = getMovementDirection()
     microbe.facingTargetPoint = getTargetPoint()
-    microbe.movementDirection = getMovementDirection()
+  --  microbe.movementDirection = getMovementDirection()
 end

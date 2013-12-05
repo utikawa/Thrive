@@ -63,7 +63,7 @@ class 'Microbe'
 --
 -- @returns microbe
 --  An object of type Microbe
-function Microbe.createMicrobeEntity(name)
+function Microbe.createMicrobeEntity(name, aiControlled)
     local entity
     if name then
         entity = Entity(name)
@@ -77,10 +77,8 @@ function Microbe.createMicrobeEntity(name)
     rigidBody.properties.linearFactor = Vector3(1, 1, 0)
     rigidBody.properties.angularFactor = Vector3(0, 0, 1)
     rigidBody.properties:touch()
-
     local reactionHandler = CollisionComponent()
     reactionHandler:addCollisionGroup("microbe")
-    
     local components = {
         AgentAbsorberComponent(),
         OgreSceneNodeComponent(),
@@ -88,6 +86,10 @@ function Microbe.createMicrobeEntity(name)
         reactionHandler,
         rigidBody
     }
+    if aiControlled then
+        local aiController = MicrobeAIComponent()
+        table.insert(components, aiController)
+    end
     for _, component in ipairs(components) do
         entity:addComponent(component)
     end
@@ -101,7 +103,8 @@ Microbe.COMPONENTS = {
     microbe = MicrobeComponent.TYPE_ID,
     rigidBody = RigidBodyComponent.TYPE_ID,
     sceneNode = OgreSceneNodeComponent.TYPE_ID,
-    collisionHandler = CollisionComponent.TYPE_ID
+    collisionHandler = CollisionComponent.TYPE_ID,
+    aiController = MicrobeAIComponent.TYPE_ID
 }
 
 
@@ -117,8 +120,10 @@ function Microbe:__init(entity)
     self.residuePhysicsTime = 0
     for key, typeId in pairs(Microbe.COMPONENTS) do
         local component = entity:getComponent(typeId)
-        assert(component ~= nil, "Can't create microbe from this entity, it's missing " .. key)
-        self[key] = entity:getComponent(typeId)
+        -- This 'if' used to be an assert, but we need it to pass due to AIComponent
+        if component ~= nil then
+            self[key] = entity:getComponent(typeId)
+        end  
     end
     if not self.microbe.initialized then
         self:_initialize()
@@ -329,7 +334,6 @@ end
 -- Updates the microbe's state
 function Microbe:update(milliseconds)
     -- Vacuoles
-    
     for agentId, vacuoleList in pairs(self.microbe.vacuoles) do
         -- Check for agents to store
         local amount = self.agentAbsorber:absorbedAgentAmount(agentId)
@@ -442,7 +446,7 @@ end
 
 function MicrobeSystem:init(gameState)
     System.init(self, gameState)
-    self.entities:init(gameState)    
+    self.entities:init(gameState)
 end
 
 

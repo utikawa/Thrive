@@ -220,7 +220,7 @@ local function setupHud()
 end
 
 local function setupPlayer()
-    local player = Microbe.createMicrobeEntity(PLAYER_NAME)
+    local player = Microbe.createMicrobeEntity(PLAYER_NAME, true)
     -- Forward
     local forwardOrganelle = MovementOrganelle(
         Vector3(0.0, 50.0, 0.0),
@@ -279,6 +279,7 @@ local function createMicrobeStage(name)
             -- Microbe specific
             MicrobeSystem(),
             MicrobeCameraSystem(),
+            MicrobeAISystem(),
             MicrobeControlSystem(),
             HudSystem(),
             AgentLifetimeSystem(),
