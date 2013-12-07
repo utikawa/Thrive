@@ -16,6 +16,7 @@ function MicrobeAIComponent:__init()
     self.intervalRemaining = self.reevalutationInterval
     self.direction = Vector3(0, 0, 0)
     self.initialized = false
+    self.targetEmitterPosition = nil
 end
 
 
@@ -105,41 +106,42 @@ function MicrobeAISystem:update(milliseconds)
         while aiComponent.intervalRemaining > aiComponent.reevalutationInterval do
             aiComponent.intervalRemaining = aiComponent.intervalRemaining - aiComponent.reevalutationInterval
             
-            
+            local targetPosition = nil
             if microbe:getAgentAmount(AgentRegistry.getAgentId("oxygen")) <= OXYGEN_SEARCH_THRESHHOLD then
+                 print("need oxygen!")
                 -- If we are NOT currenty heading towards an emitter
-                print("missing oxygen")
-                if targetEmitterPosition == nil then
-                    print("Finding new emitter")
+                if aiComponent.targetEmitterPosition == nil then
+                    print("finding emitter")
                     for emitterId, _ in pairs(self.oxygenEmitters) do
-                        targetEmitterPosition = Entity(emitterId):getComponent(OgreSceneNodeComponent.TYPE_ID).transform.position
+                        aiComponent.targetEmitterPosition = Entity(emitterId):getComponent(OgreSceneNodeComponent.TYPE_ID).transform.position
                         break -- We only get the first element
                     end      
                 end
-                targetPosition = targetEmitterPosition           
-                if targetEmitterPosition ~= nil and targetEmitterPosition.z ~= 0 then
-                    targetEmitterPosition = nil
+                targetPosition = aiComponent.targetEmitterPosition           
+                if aiComponent.targetEmitterPosition ~= nil and aiComponent.targetEmitterPosition.z ~= 0 then
+                    print("oups")
+                    aiComponent.targetEmitterPosition = nil
                 end             
             elseif microbe:getAgentAmount(AgentRegistry.getAgentId("glucose")) <= GLUCOSE_SEARCH_THRESHHOLD then
+            print("need glucose!")
                 -- If we are NOT currenty heading towards an emitter
-                if targetEmitterPosition == nil then
+                if aiComponent.targetEmitterPosition == nil then
+                print("finding glucose")
                     for emitterId, _ in pairs(self.glucoseEmitters) do
-                        targetEmitterPosition = Entity(emitterId):getComponent(OgreSceneNodeComponent.TYPE_ID).transform.position
+                        aiComponent.targetEmitterPosition = Entity(emitterId):getComponent(OgreSceneNodeComponent.TYPE_ID).transform.position
                         break
                     end  
                 end
-                targetPosition = targetEmitterPosition
-                if targetEmitterPosition ~= nil and targetEmitterPosition.z ~= 0 then
-                    targetEmitterPosition = nil
+                targetPosition = aiComponent.targetEmitterPosition
+                if aiComponent.targetEmitterPosition ~= nil and aiComponent.targetEmitterPosition.z ~= 0 then
+                 print("oups 2")
+                    aiComponent.targetEmitterPosition = nil
                 end    
-                 print("missing glucose")
             else
-                print("AAAA TEST")
-                targetEmitterPosition = nil
-                print("Not missing anythinf")
+                aiComponent.targetEmitterPosition = nil
             end
-            if targetEmitterPosition == nil then
-                print("no emitter, randomizing")
+            if aiComponent.targetEmitterPosition == nil then
+                 print("wandering")
                 local randAngle = rng:getReal(0, 2*math.pi)
                 local randDist = rng:getInt(10, aiComponent.movementRadius)
                 targetPosition = Vector3(math.cos(randAngle)* randDist, 
@@ -152,15 +154,14 @@ function MicrobeAISystem:update(milliseconds)
             local vec = (targetPosition - microbe.sceneNode.transform.position)
             vec:normalise()
             --print("VEC LENGTH: " .. vec:length())
-            aiComponent.direction = vec--Vector3(vec.x * AI_MOVEMENT_SPEED, vec.y * AI_MOVEMENT_SPEED, 0)            
+            aiComponent.direction = vec--Vector3(vec.x * AI_MOVEMENT_SPEED, vec.y * AI_MOVEMENT_SPEED, 0)   
             
+            microbe.microbe.facingTargetPoint = targetPosition -- aiComponent.direction--Vector3(0,0,0) - targetPosition
+            microbe.microbe.movementDirection = Vector3(0,0.5,0)--aiComponent.direction 
             
         end
         --print(aiComponent.direction)
 
-        microbe.microbe.facingTargetPoint = targetPosition -- aiComponent.direction--Vector3(0,0,0) - targetPosition
         
-        
-        microbe.microbe.movementDirection = Vector3(0,0.5,0)--aiComponent.direction 
     end
 end

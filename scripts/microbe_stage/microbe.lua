@@ -419,6 +419,14 @@ function Microbe:_updateAllHexColours()
     end
 end
 
+function Microbe:getComponent(typeid)
+    return self.entity:getComponent(typeid)
+end
+
+function Microbe:destroy()
+    self.entity:destroy()
+end
+
 
 --------------------------------------------------------------------------------
 -- MicrobeSystem
