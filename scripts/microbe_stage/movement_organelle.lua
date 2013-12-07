@@ -69,7 +69,7 @@ function MovementOrganelle:_turnMicrobe(microbe)
     )
     if math.abs(math.deg(alpha)) > 1 then
         microbe.rigidBody:applyTorque(
-            Vector3(0, 0, self.torque * alpha)
+            Vector3(0, 0, self.torque * alpha  )
         )
     end
 end

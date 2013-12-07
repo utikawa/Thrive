@@ -124,7 +124,7 @@ local function createSpawnSystem()
         glucoseEmitter.particlesPerEmission = 1
         glucoseEmitter.particleLifeTime = 5000
         glucoseEmitter.particleScale = Vector3(0.3, 0.3, 0.3)
-        glucoseEmitter.potencyPerParticle = 1.0
+        glucoseEmitter.potencyPerParticle = 3
         
         return entity
     end
