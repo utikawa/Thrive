@@ -62,6 +62,10 @@ function MovementOrganelle:_turnMicrobe(microbe)
     local transform = microbe.sceneNode.transform
     local targetDirection = microbe.microbe.facingTargetPoint - transform.position
     local localTargetDirection = transform.orientation:Inverse() * targetDirection
+    if localTargetDirection.z >= 0.01 then
+        print("ERROR OCCURED: ")print(microbe.microbe.facingTargetPoint)
+        end
+     --   localTargetDirection.z = 0
     assert(localTargetDirection.z < 0.01, "Microbes should only move in the 2D plane with z = 0")
     local alpha = math.atan2(
         -localTargetDirection.x,
