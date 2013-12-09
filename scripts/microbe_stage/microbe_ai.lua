@@ -112,10 +112,16 @@ function MicrobeAISystem:update(milliseconds)
                 -- If we are NOT currenty heading towards an emitter
                 if aiComponent.targetEmitterPosition == nil or aiComponent.searchedAgentId ~= AgentRegistry.getAgentId("oxygen") then
                     aiComponent.searchedAgentId = AgentRegistry.getAgentId("oxygen")
+                    local emitterArrayList = {}
+                    local i = 0
                     for emitterId, _ in pairs(self.oxygenEmitters) do
-                        aiComponent.targetEmitterPosition = Entity(emitterId):getComponent(OgreSceneNodeComponent.TYPE_ID).transform.position
-                        break -- We only get the first element
-                    end      
+                        i = i + 1
+                        emitterArrayList[i] = emitterId
+                    end     
+                    if i ~= 0 then
+                        local emitterEntity = Entity(emitterArrayList[rng:getInt(1, i)])
+                        aiComponent.targetEmitterPosition = emitterEntity:getComponent(OgreSceneNodeComponent.TYPE_ID).transform.position     
+                    end  
                 end
                 targetPosition = aiComponent.targetEmitterPosition           
                 if aiComponent.targetEmitterPosition ~= nil and aiComponent.targetEmitterPosition.z ~= 0 then
@@ -125,10 +131,16 @@ function MicrobeAISystem:update(milliseconds)
                 -- If we are NOT currenty heading towards an emitter
                 if aiComponent.targetEmitterPosition == nil or aiComponent.searchedAgentId ~= AgentRegistry.getAgentId("glucose") then
                 aiComponent.searchedAgentId = AgentRegistry.getAgentId("glucose")
+                    local emitterArrayList = {}
+                    local i = 0
                     for emitterId, _ in pairs(self.glucoseEmitters) do
-                        aiComponent.targetEmitterPosition = Entity(emitterId):getComponent(OgreSceneNodeComponent.TYPE_ID).transform.position
-                        break
-                    end  
+                        i = i + 1
+                        emitterArrayList[i] = emitterId
+                    end     
+                    if i ~= 0 then
+                        local emitterEntity = Entity(emitterArrayList[rng:getInt(1, i)])
+                        aiComponent.targetEmitterPosition = emitterEntity:getComponent(OgreSceneNodeComponent.TYPE_ID).transform.position         
+                    end
                 end
                 targetPosition = aiComponent.targetEmitterPosition
                 if aiComponent.targetEmitterPosition ~= nil and aiComponent.targetEmitterPosition.z ~= 0 then

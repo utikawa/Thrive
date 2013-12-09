@@ -131,7 +131,7 @@ local function createSpawnSystem()
     
     local microbeSpawnFunction = function(pos)
         local microbe = Microbe.createMicrobeEntity(nil, true)
-        microbe.sceneNode.transform.position = pos
+        microbe.sceneNode.transform.position = pos -- Does not work??
         -- Forward
         local forwardOrganelle = MovementOrganelle(
             Vector3(0.0, 50.0, 0.0),
@@ -185,7 +185,7 @@ local function createSpawnSystem()
     -- (square dekaunit?)
     spawnSystem:addSpawnType(testFunction, 1/20^2, 30)
     spawnSystem:addSpawnType(testFunction2, 1/20^2, 30)
-    spawnSystem:addSpawnType(microbeSpawnFunction, 1/80^2, 40)
+    spawnSystem:addSpawnType(microbeSpawnFunction, 1/30^2, 40)
     return spawnSystem
 end
 
