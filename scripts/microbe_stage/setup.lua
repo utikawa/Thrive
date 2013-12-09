@@ -139,7 +139,7 @@ local function createSpawnSystem()
         forwardOrganelle:addHex(0, 0)
         forwardOrganelle:addHex(-1, 0)
         forwardOrganelle:addHex(1, -1)
-        forwardOrganelle:setColour(ColourValue(1, 0, 0, 1))
+        forwardOrganelle:setColour(ColourValue(0, 0.7, 0.7, 1))
         microbe:addOrganelle(0, 1, forwardOrganelle)
         -- Backward
         local backwardOrganelle = MovementOrganelle(
@@ -149,7 +149,7 @@ local function createSpawnSystem()
         backwardOrganelle:addHex(0, 0)
         backwardOrganelle:addHex(-1, 1)
         backwardOrganelle:addHex(1, 0)
-        backwardOrganelle:setColour(ColourValue(1, 0, 0, 1))
+        backwardOrganelle:setColour(ColourValue(0, 0.7, 0.7, 1))
         microbe:addOrganelle(0, -2, backwardOrganelle)
         -- Storage energy
         local storageOrganelle = StorageOrganelle(AgentRegistry.getAgentId("atp"), 100.0)

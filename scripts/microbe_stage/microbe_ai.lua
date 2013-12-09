@@ -17,6 +17,7 @@ function MicrobeAIComponent:__init()
     self.direction = Vector3(0, 0, 0)
     self.initialized = false
     self.targetEmitterPosition = nil
+    self.searchedAgentId = nil
 end
 
 
@@ -110,8 +111,9 @@ function MicrobeAISystem:update(milliseconds)
             if microbe:getAgentAmount(AgentRegistry.getAgentId("oxygen")) <= OXYGEN_SEARCH_THRESHHOLD then
                  print("need oxygen!")
                 -- If we are NOT currenty heading towards an emitter
-                if aiComponent.targetEmitterPosition == nil then
+                if aiComponent.targetEmitterPosition == nil or aiComponent.searchedAgentId ~= AgentRegistry.getAgentId("oxygen") then
                     print("finding emitter")
+                    aiComponent.searchedAgentId = AgentRegistry.getAgentId("oxygen")
                     for emitterId, _ in pairs(self.oxygenEmitters) do
                         aiComponent.targetEmitterPosition = Entity(emitterId):getComponent(OgreSceneNodeComponent.TYPE_ID).transform.position
                         break -- We only get the first element
@@ -119,13 +121,13 @@ function MicrobeAISystem:update(milliseconds)
                 end
                 targetPosition = aiComponent.targetEmitterPosition           
                 if aiComponent.targetEmitterPosition ~= nil and aiComponent.targetEmitterPosition.z ~= 0 then
-                    print("oups")
                     aiComponent.targetEmitterPosition = nil
                 end             
             elseif microbe:getAgentAmount(AgentRegistry.getAgentId("glucose")) <= GLUCOSE_SEARCH_THRESHHOLD then
             print("need glucose!")
                 -- If we are NOT currenty heading towards an emitter
-                if aiComponent.targetEmitterPosition == nil then
+                if aiComponent.targetEmitterPosition == nil or aiComponent.searchedAgentId ~= AgentRegistry.getAgentId("glucose") then
+                aiComponent.searchedAgentId = AgentRegistry.getAgentId("glucose")
                 print("finding glucose")
                     for emitterId, _ in pairs(self.glucoseEmitters) do
                         aiComponent.targetEmitterPosition = Entity(emitterId):getComponent(OgreSceneNodeComponent.TYPE_ID).transform.position
@@ -154,8 +156,9 @@ function MicrobeAISystem:update(milliseconds)
             local vec = (targetPosition - microbe.sceneNode.transform.position)
             vec:normalise()
             --print("VEC LENGTH: " .. vec:length())
+
+            print("setting target position: ") print(targetPosition)
             aiComponent.direction = vec--Vector3(vec.x * AI_MOVEMENT_SPEED, vec.y * AI_MOVEMENT_SPEED, 0)   
-            
             microbe.microbe.facingTargetPoint = targetPosition -- aiComponent.direction--Vector3(0,0,0) - targetPosition
             microbe.microbe.movementDirection = Vector3(0,0.5,0)--aiComponent.direction 
             
