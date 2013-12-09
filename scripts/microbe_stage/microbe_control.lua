@@ -43,6 +43,6 @@ function MicrobeControlSystem:update(milliseconds)
     local microbe = player:getComponent(MicrobeComponent.TYPE_ID)
     local targetPoint = getTargetPoint()
     local movementDirection = getMovementDirection()
-   -- microbe.facingTargetPoint = getTargetPoint()
-  --  microbe.movementDirection = getMovementDirection()
+    microbe.facingTargetPoint = getTargetPoint()
+    microbe.movementDirection = getMovementDirection()
 end

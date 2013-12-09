@@ -131,6 +131,7 @@ local function createSpawnSystem()
     
     local microbeSpawnFunction = function(pos)
         local microbe = Microbe.createMicrobeEntity(nil, true)
+        microbe.sceneNode.transform.position = pos
         -- Forward
         local forwardOrganelle = MovementOrganelle(
             Vector3(0.0, 50.0, 0.0),
@@ -184,7 +185,7 @@ local function createSpawnSystem()
     -- (square dekaunit?)
     spawnSystem:addSpawnType(testFunction, 1/20^2, 30)
     spawnSystem:addSpawnType(testFunction2, 1/20^2, 30)
-    spawnSystem:addSpawnType(microbeSpawnFunction, 1/100^2, 40)
+    spawnSystem:addSpawnType(microbeSpawnFunction, 1/80^2, 40)
     return spawnSystem
 end
 
@@ -272,7 +273,7 @@ local function setupHud()
 end
 
 local function setupPlayer()
-    local player = Microbe.createMicrobeEntity(PLAYER_NAME, true)
+    local player = Microbe.createMicrobeEntity(PLAYER_NAME, false)
     -- Forward
     local forwardOrganelle = MovementOrganelle(
         Vector3(0.0, 50.0, 0.0),
