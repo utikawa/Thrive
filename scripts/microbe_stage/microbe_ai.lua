@@ -1,16 +1,16 @@
 --------------------------------------------------------------------------------
--- MicrobeAIComponent
+-- MicrobeAIControllerComponent
 --
 -- Component for identifying and determining AI controlled microbes.
 --------------------------------------------------------------------------------
-class 'MicrobeAIComponent' (Component)
+class 'MicrobeAIControllerComponent' (Component)
 
 OXYGEN_SEARCH_THRESHHOLD = 8
 GLUCOSE_SEARCH_THRESHHOLD = 5
 AI_MOVEMENT_SPEED = 0.5
 
 
-function MicrobeAIComponent:__init()
+function MicrobeAIControllerComponent:__init()
     Component.__init(self)
     self.movementRadius = 20
     self.reevalutationInterval = 1000
@@ -20,7 +20,7 @@ function MicrobeAIComponent:__init()
     self.searchedAgentId = nil
 end
 
-function MicrobeAIComponent:storage()
+function MicrobeAIControllerComponent:storage()
     local storage = Component.storage(self)
     storage:set("movementRadius", self.movementRadius)
     storage:set("reevalutationInterval", self.reevalutationInterval)
@@ -30,7 +30,7 @@ function MicrobeAIComponent:storage()
     storage:set("searchedAgentId", self.searchedAgentId)
 end
 
-function MicrobeAIComponent:load(storage)
+function MicrobeAIControllerComponent:load(storage)
     Component.load(self, storage)
     self.movementRadius = storage:get("movementRadius", 20)
     self.reevalutationInterval = storage:get("reevalutationInterval", 1000)
@@ -40,7 +40,7 @@ function MicrobeAIComponent:load(storage)
     self.searchedAgentId = storage:get("searchedAgentId", nil)
 end
 
-REGISTER_COMPONENT("MicrobeAIComponent", MicrobeAIComponent)
+REGISTER_COMPONENT("MicrobeAIControllerComponent", MicrobeAIControllerComponent)
 
 
 --------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ function MicrobeAISystem:__init()
     System.__init(self)
     self.entities = EntityFilter(
         {
-            MicrobeAIComponent,
+            MicrobeAIControllerComponent,
             MicrobeComponent
         }, 
         true
@@ -111,7 +111,7 @@ function MicrobeAISystem:update(milliseconds)
     self.entities:clearChanges()
     self.emitters:clearChanges()
     for _, microbe in pairs(self.microbes) do
-        local aiComponent = microbe:getComponent(MicrobeAIComponent.TYPE_ID)
+        local aiComponent = microbe:getComponent(MicrobeAIControllerComponent.TYPE_ID)
         aiComponent.intervalRemaining = aiComponent.intervalRemaining + milliseconds
         while aiComponent.intervalRemaining > aiComponent.reevalutationInterval do
             aiComponent.intervalRemaining = aiComponent.intervalRemaining - aiComponent.reevalutationInterval

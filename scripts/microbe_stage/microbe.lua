@@ -87,7 +87,7 @@ function Microbe.createMicrobeEntity(name, aiControlled)
         rigidBody
     }
     if aiControlled then
-        local aiController = MicrobeAIComponent()
+        local aiController = MicrobeAIControllerComponent()
         table.insert(components, aiController)
     end
     for _, component in ipairs(components) do
