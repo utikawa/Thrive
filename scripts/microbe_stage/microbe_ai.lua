@@ -9,27 +9,35 @@ OXYGEN_SEARCH_THRESHHOLD = 8
 GLUCOSE_SEARCH_THRESHHOLD = 5
 AI_MOVEMENT_SPEED = 0.5
 
+
 function MicrobeAIComponent:__init()
     Component.__init(self)
     self.movementRadius = 20
     self.reevalutationInterval = 1000
     self.intervalRemaining = self.reevalutationInterval
     self.direction = Vector3(0, 0, 0)
-    self.initialized = false
     self.targetEmitterPosition = nil
     self.searchedAgentId = nil
 end
 
+function MicrobeAIComponent:storage()
+    local storage = Component.storage(self)
+    storage:set("movementRadius", self.movementRadius)
+    storage:set("reevalutationInterval", self.reevalutationInterval)
+    storage:set("intervalRemaining", self.intervalRemaining)
+    storage:set("direction", self.direction)
+    storage:set("targetEmitterPosition", self.targetEmitterPosition)
+    storage:set("searchedAgentId", self.searchedAgentId)
+end
 
 function MicrobeAIComponent:load(storage)
     Component.load(self, storage)
-
-end
-
-
-function MicrobeAIComponent:storage()
-    local storage = Component.storage(self)
-
+    self.movementRadius = storage:get("movementRadius", 20)
+    self.reevalutationInterval = storage:get("reevalutationInterval", 1000)
+    self.intervalRemaining = storage:get("intervalRemaining", self.reevalutationInterval)
+    self.direction = storage:get("direction", Vector3(0, 0, 0))
+    self.targetEmitterPosition = storage:get("targetEmitterPosition", nil)
+    self.searchedAgentId = storage:get("searchedAgentId", nil)
 end
 
 REGISTER_COMPONENT("MicrobeAIComponent", MicrobeAIComponent)
@@ -72,6 +80,7 @@ end
 
 
 function MicrobeAISystem:shutdown()
+    System.shutdown(self)
     self.entities:shutdown()
     self.emitters:shutdown()
 end
@@ -102,7 +111,7 @@ function MicrobeAISystem:update(milliseconds)
     self.entities:clearChanges()
     self.emitters:clearChanges()
     for _, microbe in pairs(self.microbes) do
-        local aiComponent = microbe.aiController
+        local aiComponent = microbe:getComponent(MicrobeAIComponent.TYPE_ID)
         aiComponent.intervalRemaining = aiComponent.intervalRemaining + milliseconds
         while aiComponent.intervalRemaining > aiComponent.reevalutationInterval do
             aiComponent.intervalRemaining = aiComponent.intervalRemaining - aiComponent.reevalutationInterval

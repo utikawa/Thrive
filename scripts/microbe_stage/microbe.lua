@@ -103,8 +103,7 @@ Microbe.COMPONENTS = {
     microbe = MicrobeComponent.TYPE_ID,
     rigidBody = RigidBodyComponent.TYPE_ID,
     sceneNode = OgreSceneNodeComponent.TYPE_ID,
-    collisionHandler = CollisionComponent.TYPE_ID,
-    aiController = MicrobeAIComponent.TYPE_ID
+    collisionHandler = CollisionComponent.TYPE_ID
 }
 
 
@@ -120,10 +119,8 @@ function Microbe:__init(entity)
     self.residuePhysicsTime = 0
     for key, typeId in pairs(Microbe.COMPONENTS) do
         local component = entity:getComponent(typeId)
-        -- This 'if' used to be an assert, but we need it to pass due to AIComponent
-        if component ~= nil then
-            self[key] = entity:getComponent(typeId)
-        end  
+        assert(component ~= nil, "Can't create microbe from this entity, it's missing " .. key)
+        self[key] = entity:getComponent(typeId)
     end
     if not self.microbe.initialized then
         self:_initialize()
